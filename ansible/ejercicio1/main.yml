@@ -1,0 +1,27 @@
+---
+- name: Actualizar e instalar paquetes
+  apt:
+    update_cache: yes
+    name:
+      - git
+      - curl
+      - python3
+    state: present
+
+- name: Configurar zona horaria
+  become: true
+  community.general.timezone:
+    name: America/Lima
+
+- name: Crear un grupo
+  group:
+    name: admin
+    state: present
+
+- name: Crear un usuario
+  user:
+    name: devuser
+    shell: /bin/bash
+    #password: "{{ 'SecurePassword' | password_hash('sha512') }}"
+    groups: admin
+    append: yes
