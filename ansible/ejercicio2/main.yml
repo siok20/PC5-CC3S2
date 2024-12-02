@@ -1,2 +1,15 @@
 ---
 - name: Instalar Nginx
+  apt:
+    update_cache: yes
+    name:
+      - nginx
+    state: present
+
+- name: Generar certificado SSL autofirmado
+  command: >
+    openssl req
+      -newkey
+      rsa:2048
+      -keyout /etc/ssl/private/apache-selfsigned.key
+      -out /etc/ssl/certs/apache-selfsigned.crt

@@ -6,4 +6,4 @@
   remote_user: ubuntu
   tasks:
     - import_tasks: ansible/ejercicio1/main.yml
-    #- import_tasks: ansible/ejercicio2/main.yml
+    - import_tasks: ansible/ejercicio2/main.yml
