@@ -38,3 +38,19 @@ System clock synchronized: no
               NTP service: inactive                   
           RTC in local TZ: no 
 ```
+
+Ver los usuarios y grupos en la VM
+
+`less /etc/group`
+
+```
+admin:x:117:devuser
+netdev:x:118:ubuntu
+lxd:x:119:ubuntu
+vboxsf:x:120:
+vagrant:x:1000:
+systemd-coredump:x:999:
+ubuntu:x:1001:
+devuser:x:1002:
+(END)
+```

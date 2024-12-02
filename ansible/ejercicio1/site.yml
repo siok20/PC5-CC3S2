@@ -19,10 +19,14 @@
       community.general.timezone:
         name: America/Lima
 
+    - name: Crear un grupo
+      group:
+        name: admin
+        state: present
+
     - name: Crear un usuario
       user:
-        name: "devuser"
-        groups: "admin"
+        name: devuser
+        shell: /bin/bash
+        groups: admin
         append: yes
-        shell: "/bin/bash"
-        create_home: yes
