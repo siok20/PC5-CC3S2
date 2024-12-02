@@ -7,9 +7,6 @@
     state: present
 
 - name: Generar certificado SSL autofirmado
-  command: >
-    openssl req
-      -newkey
-      rsa:2048
-      -keyout /etc/ssl/private/apache-selfsigned.key
-      -out /etc/ssl/certs/apache-selfsigned.crt
+  shell: |
+    openssl genrsa -out private.key 1024
+    openssl req -new -x509 -key private.key -out certificate.crt -days 365
