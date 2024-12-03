@@ -6,7 +6,6 @@
       - git
       - curl
       - net-tools
-      - python3
     state: present
 
 - name: Configurar zona horaria

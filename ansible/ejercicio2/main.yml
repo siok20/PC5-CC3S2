@@ -20,9 +20,9 @@
   openssl_csr:
     path: /etc/nginx/ssl/nginx-key.csr
     privatekey_path: /etc/nginx/ssl/nginx-key.key
-    common_name: "example.com"
-    organization_name: "Mi Organización"
-    country_name: "ES"
+    common_name: "siok.com"
+    organization_name: "siok"
+    country_name: "PE"
     state: present
 
 - name: Generar certificado SSL autofirmado
@@ -35,37 +35,33 @@
     state: present
 
 - name: Configurar Nginx para SSL
-  copy:
+  template:
+    src: templates/nginx_ssl.conf.j2
     dest: /etc/nginx/sites-available/default
-    content: |
-      server {
-        listen 80 default_server;
-        server_name domain.com;
-
-        return 301 https://$host$request_uri;
-      }
-
-      server {
-        listen 443 ssl;
-        server_name domain.com;
-
-        ssl_certificate /etc/nginx/ssl/nginx-key.crt;
-        ssl_certificate_key /etc/nginx/ssl/nginx-key.key;
-
-        root /var/www/html;
-        index index.html;
-
-        location / {
-            try_files $uri $uri/ =404;
-        }
-      }
+    mode: '0664'
   notify: Reiniciar Nginx
+
+- name: Copiar certificado SSL al directorio de certificados confiables
+  copy:
+    src: /etc/nginx/ssl/nginx-key.crt
+    dest: /usr/local/share/ca-certificates/nginx-selfsigned.crt
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Actualizar los certificados confiables
+  command: update-ca-certificates
+  register: update_certificates_result
 
 - name: Instalar UFW
   apt:
     name: ufw 
     state: present
     update_cache: yes
+
+- name: Habilitar UFW
+  ufw:
+    state: enabled
 
 - name: Permitir tráfico SSH
   ufw:
@@ -77,7 +73,3 @@
   ufw:
     rule: allow
     name: "Nginx Full"
-
-- name: Habilitar UFW
-  ufw:
-    state: enabled
