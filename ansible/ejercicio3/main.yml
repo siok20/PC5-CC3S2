@@ -12,4 +12,31 @@
       - flask
       - gunicorn
     state: present
-    
+
+- name: Crear directorio para apliocacion Flask
+  file:
+    path: /opt/flask-application/
+    state: directory
+    mode: '0755'
+
+- name: Copiar apliacion de Flask
+  copy:
+    src: ansible/ejercicio3/{{ item }}
+    dest: /opt/flask-application/{{ item }}
+    group: admin
+    mode: '0750'
+  loop:
+    - greeting.py
+    - wsgi.py
+
+- name: Copiar archivo de unidad systemd para greeting.py
+  copy:
+    src: ansible/ejercicio3/greeting.service
+    dest: /etc/systemd/system/greeting.service
+
+- name: Iniciar y habilitar la aplicaciòn greeting.py
+  systemd:
+    name: greeting.service
+    daemon_reload: yes
+    state: started
+    enable: yes

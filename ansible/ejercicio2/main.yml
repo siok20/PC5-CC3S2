@@ -44,10 +44,11 @@
 - name: Copiar certificado SSL al directorio de certificados confiables
   copy:
     src: /etc/nginx/ssl/nginx-key.crt
-    dest: /usr/local/share/ca-certificates/nginx-selfsigned.crt
+    dest: /usr/local/share/ca-certificates/nginx-key.crt
     owner: root
     group: root
     mode: '0644'
+    remote_src: yes
 
 - name: Actualizar los certificados confiables
   command: update-ca-certificates
