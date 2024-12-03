@@ -172,3 +172,19 @@ Commercial support is available at
 </body>
 </html>
 ```
+
+## Ejercicio 3
+
+Vagrant is running
+
+```bash
+● greeting.service - La aplicación de saludo altamente complicada
+     Loaded: loaded (/etc/systemd/system/greeting.service; enabled; vendor preset: enabled)
+     Active: active (running) since Tue 2024-12-03 16:26:05 -05; 50s ago
+   Main PID: 5070 (gunicorn3)
+      Tasks: 2 (limit: 2324)
+     Memory: 31.0M
+     CGroup: /system.slice/greeting.service
+             ├─5070 /usr/bin/python3 /usr/bin/gunicorn3 --bind 0.0.0.0:5000 --access-logfile - --error-logfile - wsgi:app
+             └─5089 /usr/bin/python3 /usr/bin/gunicorn3 --bind 0.0.0.0:5000 --access-logfile - --error-logfile - wsgi:app
+```

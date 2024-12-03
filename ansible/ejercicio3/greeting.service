@@ -3,9 +3,9 @@ Description=La aplicación de saludo altamente complicada
 After=network.target
 
 [Service]
-User=www-data
+User=devuser
 Group=admin
-WorkingDirectory=/opt/ingenieria
+WorkingDirectory=/opt/flask-application
 ExecStart=/usr/bin/gunicorn3 --bind 0.0.0.0:5000 --access-logfile - --error-logfile - wsgi:app
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed

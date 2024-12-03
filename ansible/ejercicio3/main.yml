@@ -3,16 +3,12 @@
     name:
       - python3
       - python3-pip
+      - python3-flask
+      - gunicorn
     state: present
     update_cache: yes
 
-- name: Instalar Flask y Gunicorn
-  pip:
-    name:
-      - flask
-      - gunicorn
-    state: present
-
+-
 - name: Crear directorio para apliocacion Flask
   file:
     path: /opt/flask-application/
@@ -39,4 +35,4 @@
     name: greeting.service
     daemon_reload: yes
     state: started
-    enable: yes
+    enabled: yes
