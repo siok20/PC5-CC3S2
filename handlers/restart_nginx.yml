@@ -1,4 +1,4 @@
-- name: Reiniciar servidor SSH
+- name: Reiniciar Nginx
   service:
     name: nginx
     state: restarted

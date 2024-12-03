@@ -1,23 +1,23 @@
 - name: Instalar Nginx
-  ansible.builtin.apt:
+  apt:
     name: nginx
     update_cache: yes
     state: present
 
 - name: Crear directorio para certificados SSL
-  ansible.builtin.file:
+  file:
     path: /etc/nginx/ssl
     state: directory
     mode: '0755'
 
 - name: Generar clave privada para SSL
-  ansible.builtin.openssl_privatekey:
+  openssl_privatekey:
     path: /etc/nginx/ssl/nginx-key.key
     size: 2048
     state: present
 
 - name: Generar solicitud de firma de certificado (CSR)
-  ansible.builtin.openssl_csr:
+  openssl_csr:
     path: /etc/nginx/ssl/nginx-key.csr
     privatekey_path: /etc/nginx/ssl/nginx-key.key
     common_name: "example.com"
@@ -26,10 +26,58 @@
     state: present
 
 - name: Generar certificado SSL autofirmado
-  ansible.builtin.openssl_certificate:
+  openssl_certificate:
     provider: selfsigned
     selfsigned_not_after: "+365d"
     path: /etc/nginx/ssl/nginx-key.crt
     privatekey_path: /etc/nginx/ssl/nginx-key.key
     csr_path: /etc/nginx/ssl/nginx-key.csr
     state: present
+
+- name: Configurar Nginx para SSL
+  copy:
+    dest: /etc/nginx/sites-available/default
+    content: |
+      server {
+        listen 80 default_server;
+        server_name domain.com;
+
+        return 301 https://$host$request_uri;
+      }
+
+      server {
+        listen 443 ssl;
+        server_name domain.com;
+
+        ssl_certificate /etc/nginx/ssl/nginx-key.crt;
+        ssl_certificate_key /etc/nginx/ssl/nginx-key.key;
+
+        root /var/www/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ =404;
+        }
+      }
+  notify: Reiniciar Nginx
+
+- name: Instalar UFW
+  apt:
+    name: ufw 
+    state: present
+    update_cache: yes
+
+- name: Permitir tráfico SSH
+  ufw:
+    rule: allow
+    port: 22
+    proto: tcp
+
+- name: Permitir tráfico HTTP y HTTPS
+  ufw:
+    rule: allow
+    name: "Nginx Full"
+
+- name: Habilitar UFW
+  ufw:
+    state: enabled
