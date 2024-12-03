@@ -1,12 +1,35 @@
----
 - name: Instalar Nginx
-  apt:
+  ansible.builtin.apt:
+    name: nginx
     update_cache: yes
-    name:
-      - nginx
+    state: present
+
+- name: Crear directorio para certificados SSL
+  ansible.builtin.file:
+    path: /etc/nginx/ssl
+    state: directory
+    mode: '0755'
+
+- name: Generar clave privada para SSL
+  ansible.builtin.openssl_privatekey:
+    path: /etc/nginx/ssl/nginx-key.key
+    size: 2048
+    state: present
+
+- name: Generar solicitud de firma de certificado (CSR)
+  ansible.builtin.openssl_csr:
+    path: /etc/nginx/ssl/nginx-key.csr
+    privatekey_path: /etc/nginx/ssl/nginx-key.key
+    common_name: "example.com"
+    organization_name: "Mi Organización"
+    country_name: "ES"
     state: present
 
 - name: Generar certificado SSL autofirmado
-  shell: |
-    openssl genrsa -out private.key 1024
-    openssl req -new -x509 -key private.key -out certificate.crt -days 365
+  ansible.builtin.openssl_certificate:
+    provider: selfsigned
+    selfsigned_not_after: "+365d"
+    path: /etc/nginx/ssl/nginx-key.crt
+    privatekey_path: /etc/nginx/ssl/nginx-key.key
+    csr_path: /etc/nginx/ssl/nginx-key.csr
+    state: present
