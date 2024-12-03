@@ -107,3 +107,31 @@ total 12
 -rw-r--r-- 1 root root 1005 Dec  3 10:50 nginx-key.csr
 -rw------- 1 root root 1675 Dec  3 10:50 nginx-key.key
 ```
+
+Comprobar UFW
+
+```bash
+vagrant@ubuntu-focal:~$ sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere                  
+Nginx Full                 ALLOW       Anywhere                  
+22/tcp (v6)                ALLOW       Anywhere (v6)             
+Nginx Full (v6)            ALLOW       Anywhere (v6)             
+
+vagrant@ubuntu-focal:~$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere                  
+80,443/tcp (Nginx Full)    ALLOW IN    Anywhere                  
+22/tcp (v6)                ALLOW IN    Anywhere (v6)             
+80,443/tcp (Nginx Full (v6)) ALLOW IN    Anywhere (v6)
+```
+
