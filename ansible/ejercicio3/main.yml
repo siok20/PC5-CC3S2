@@ -25,14 +25,24 @@
     - greeting.py
     - wsgi.py
 
-- name: Copiar archivo de unidad systemd para greeting.py
-  copy:
-    src: ansible/ejercicio3/greeting.service
-    dest: /etc/systemd/system/greeting.service
+- name: Copiar archivo de unidad systemd para greeting.py en multiples instancias
+  template:
+    src: templates/greeting.service.j2
+    dest: /etc/systemd/system/greeting_{{ item.port }}.service
+  loop:
+    - { port: 5000 }
+    - { port: 5001 }
+    - { port: 5002 }
+    - { port: 5003 }
 
 - name: Iniciar y habilitar la aplicaciòn greeting.py
   systemd:
-    name: greeting.service
+    name: greeting_{{ item }}.service
     daemon_reload: yes
     state: started
     enabled: yes
+  loop:
+    - 5000
+    - 5001
+    - 5002
+    - 5003

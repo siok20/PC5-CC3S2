@@ -175,7 +175,7 @@ Commercial support is available at
 
 ## Ejercicio 3
 
-Vagrant is running
+greeting.service is running
 
 ```bash
 ● greeting.service - La aplicación de saludo altamente complicada
@@ -187,4 +187,9 @@ Vagrant is running
      CGroup: /system.slice/greeting.service
              ├─5070 /usr/bin/python3 /usr/bin/gunicorn3 --bind 0.0.0.0:5000 --access-logfile - --error-logfile - wsgi:app
              └─5089 /usr/bin/python3 /usr/bin/gunicorn3 --bind 0.0.0.0:5000 --access-logfile - --error-logfile - wsgi:app
+```
+
+```bash
+vagrant@ubuntu-focal:~$ curl http://localhost:5000
+<h1 style='color:green'>Greetings!</h1>
 ```
