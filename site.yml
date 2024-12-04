@@ -12,3 +12,4 @@
   handlers:
     - import_tasks: handlers/restart_nginx.yml
     - import_tasks: handlers/restart_prometheus.yml
+    - import_tasks: handlers/restart_UFW.yml

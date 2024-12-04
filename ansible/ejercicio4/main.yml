@@ -15,7 +15,6 @@
       - prometheus-flask-exporter
       - gunicorn
     state: present
-    update_cache: yes
 
 
 - name: Crear directorio para Prometheus
@@ -41,6 +40,11 @@
   notify:
     - Reiniciar Prometheus
 
+- name: Usuario Node exporter
+  user:
+    name: node_exporter
+    shell: /sbin/nologin
+
 - name: Instalar Grafana
   shell: |
     sudo wget -q -O - https://packages.grafana.com/gpg.key | apt-key add -
@@ -51,7 +55,7 @@
 - name: Configurar puertos 
   ufw:
     rule: allow
-    port: {{ item }}
+    port: '{{ item }}'
     proto: tcp
   loop:
     - 9090  
@@ -64,3 +68,18 @@
     name: prometheus
     state: started
     enabled: yes
+
+- name: Habilitar e iniciar el servicio de Grafana
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: yes
+
+- name: Esperar a que Grafana esté accesible
+  uri:
+    url: "http://localhost:3000"
+    status_code: 200
+  register: __result
+  until: __result.status == 200
+  retries: 120
+  delay: 2
