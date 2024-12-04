@@ -1,0 +1,23 @@
+- name: Instalar Prometheus y Node Exporter
+  apt:
+    name: 
+      - prometheus
+      - prometheus-node-exporter
+    state: present
+    update_cache: yes
+
+- name: Crear directorio para Prometheus
+  file:
+    path: /etc/prometheus
+    state: directory
+    mode: '0755'
+
+- name: Configurar promethues
+  template:
+    src: templates/prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: devuser
+    group: admin
+    mode: 0644
+  notify:
+    - Reiniciar Prometheus
