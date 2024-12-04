@@ -18,11 +18,13 @@ Vagrant.configure("2") do |config|
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "2048"
-    vb.name= "vm_ej1"
+    vb.name= "vm_ansible"
+    vb.gui= false
   end
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "site.yml"
+    ansible.extra_vars = { ansible_python_interpreter: "/usr/bin/python3" }
   end
 
   # Disable automatic box update checking. If you disable this, then
